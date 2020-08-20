@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import axios from 'axios';
 
-function App() {
+import Header from './Pages/Header';
+import CharactersGrid from './components/CharactersGrid';
+
+const App = () => {
+  const [characters, SetCharacters] = useState([]);
+  const [isLoading, SetIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCharacters = async () => {
+      const result = await axios(`https://rickandmortyapi.com/api/character/`);
+
+      console.log(result.data);
+      SetCharacters(result.data.results);
+      SetIsLoading(false);
+    };
+
+    fetchCharacters();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='container'>
+      <Header />
+      <CharactersGrid isLoading={isLoading} characters={characters} />
     </div>
   );
-}
+};
 
 export default App;
